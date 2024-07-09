@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniBrowser - Secure Web Browsing</title>
+  <style>
+    html {
+      overflow: hidden;
+      max-width: 100vw;
+    }
+
+    body {
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      position: relative;
+      height: calc(100vh - 6px);
+      border: 6px solid blue;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background-color: blue;
+    }
+
+    header {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      background-color: blue;
+    }
+
+    .logo {
+      height: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    #webForm {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    #textInput {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 1rem;
+      font-size: 1rem;
+    }
+
+    #searchButton {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #searchButton:hover {
+      background-color: #0069d9;
+    }
+
+    iframe {
+      width: 100%;
+      border: none;
+      height: calc(100vh - 80px);
+      /* Added attribute here */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.svg" alt="MiniBrowser Logo" class="logo">
+      <div id="webForm">
+        <input type="text" id="textInput" placeholder="Enter URL or search term">
+        <button type="button" id="searchButton">Load</button>
+      </div>
+      <img src="logo.svg" alt="MiniBrowser Logo" class="logo">
+    </header>
+    <iframe id="miniBrowserComponent" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen src= ""></iframe>
+  </div>
+  <script>
+    const urlInput = document.getElementById('textInput');
+    const loadButton = document.getElementById('searchButton');
+    const iframe = document.getElementById('miniBrowserComponent');
+    const handleInput = () => {
+      let userInput = urlInput.value.trim();
+      if (userInput) {
+        if (userInput.startsWith('http://') || userInput.startsWith('https://')) {
+          iframe.src = userInput;
+        } else if (userInput.indexOf('.') !== -1 && !userInput.startsWith('www.')) {
+          iframe.src = 'http://' + userInput;
+        } else {
+          userInput = 'https://www.bing.com/search?q=' + encodeURIComponent(userInput);
+          iframe.src = userInput;
+        }
+      } else {
+        iframe.src = '';
+      }
+    };
+    urlInput.addEventListener('keypress', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleInput();
+      }
+    });
+    loadButton.addEventListener('click', handleInput);
+  </script>
+</body>
+</html>
